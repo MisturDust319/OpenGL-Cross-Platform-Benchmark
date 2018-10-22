@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# exclude the libraries directory
+./lib
+
+# for now at least, don't include third party
+# header files
+include/GLAD/
+include/GLFW/
+include/KHR/

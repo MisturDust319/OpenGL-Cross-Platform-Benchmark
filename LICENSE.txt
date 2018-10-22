@@ -1,7 +1,7 @@
-FOR GLAD SOURCE FILES:
 The MIT License (MIT)
 
-Copyright (c) 2013-2018 David Herberth
+For all of my (Stan Slupecki) custom code: Copyright (c) 2018 Stanislaus Slupecki
+For all GLAD resources: Copyright (c) 2013-2018 David Herberth
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,3 +19,8 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+FOR ALL OTHER DEPENDANCIES:
+I'm a bit green with the licensing, but let's just defer to the copyrights
+of the source files and the corresponding licenses?
+I need to get this code running and this isn't meant for commercial use
