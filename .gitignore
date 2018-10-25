@@ -39,3 +39,7 @@
 include/GLAD/
 include/GLFW/
 include/KHR/
+include/GLM/
+
+#ignore CSV files
+*.csv
