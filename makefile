@@ -1,5 +1,5 @@
 target       := a.out
-sources      := src/main.cpp src/FPShistory.cpp src/history.cpp src/GLAD/glad.c src/shader.cpp
+sources      := src/main.cpp src/FPShistory.cpp src/history.cpp src/shader.cpp
 
 includes     := . include
 
@@ -8,7 +8,7 @@ objects      := $(subst .c,.o,$(objects))
 
 override src_path := $(src_path) $(includes)
 override lib_path := $(lib_path) -Llib/GLFW
-override libs     := $(libs) -lglut -lglu -lgl -lGLEW
+override libs     := $(libs) -lglut -lglu -lgl -lGLEW -lglfw3dll
 # possible libs: -lglfw3dll
 # (glfw)
 

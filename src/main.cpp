@@ -1,17 +1,25 @@
 
+#define GLFW_DLL
+
 #include <GL/glew.h>
-#include <gl/freeglut.h>
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <cmath>
 
 #include <src/shader.cpp>
+#include <GLBenchmark/FPS_history.h>
 
 // settings
 class Manager {
 private:
 	// shader object
 	Shader shader;
+	// create object to track fps
+	FPSHistory hist;
+
+	//glfw window
+	GLFWwindow* window;
 
 	// buffers
 	GLuint VBO, VAO;
@@ -26,21 +34,48 @@ private:
     const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
 
+	// values for tracking fps
+	double currentTime, previousTime;
+	int frameCount;
+
 public:
 	// CONSTRUCTOR
 	Manager(int argc, char** argv) {
 
-		// init GLUT and create Window
-		glutInit(&argc, argv);
-		glutInitContextVersion(3,3); // init to OpenGL v 3.3 
-		glutInitContextProfile(GLUT_CORE_PROFILE); // Set up to core profile
-		glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-		glutInitWindowPosition(100,100);
-		glutInitWindowSize(SCR_WIDTH, SCR_HEIGHT);
-		glutCreateWindow("Lighthouse3D - GLUT Tutorial");
+		// init assorted variables
+		currentTime = previousTime = 0.0;
+		frameCount = 0;
+
+		// glfw: initialize and configure
+	    // ------------------------------
+	    glfwInit();
+	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	#ifdef __APPLE__
+	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+	#endif
+
+	    // glfw window creation
+	    // --------------------
+	    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+	    if (window == NULL)
+	    {
+	        std::cout << "Failed to create GLFW window" << std::endl;
+	        glfwTerminate();	        
+	    }
+	    glfwMakeContextCurrent(window);
 
 		// init GLEW
-		glewInit();
+		GLenum err = glewInit();
+		if (err != GLEW_OK) {
+			// const GLubyte* vendor = glGetString​(GL_VENDOR); 
+		  	std::cout << "GLEW ERROR: \n" << glewGetErrorString(err) << std::endl << "vendor: " << glGetString(GL_VENDOR);
+		  	exit(1); // or handle the error in a nicer way
+		}
+		if (!GLEW_VERSION_3_3)  // check that the machine supports the 2.1 API.
+		  exit(1); // or handle the error in a nicer way
 
 		// init shader
 		shader.init("src/shader.vert","src/shader.frag");
@@ -68,47 +103,56 @@ public:
 	    // ------------------------------------------------------------------------
 	    glDeleteVertexArrays(1, &VAO);
 	    glDeleteBuffers(1, &VBO);
+
+	    // save FPS history
+	    hist.saveHistory();
 	}
 
 	// RENDER INSTRUCTIONS
 	void renderScene(void) {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// glBegin(GL_TRIANGLES);
-		// 	glVertex3f(-0.5,-0.5,0.0);
-		// 	glVertex3f(0.5,0.0,0.0);
-		// 	glVertex3f(0.0,0.5,0.0);
-		// glEnd();
+		// calculate FPS
+		calculateFPS();
 
 		// update shader uniform
-		float timeValue = glutGet(GLUT_ELAPSED_TIME);
-		float blueValue = sin(timeValue/1000) / 2.0f + 0.5f;
+		double timeValue = glfwGetTime();
+
+		float blueValue = sin(timeValue) / 2.0f + 0.5f;
 		shader.setFloat("ourColor", blueValue);
 
 		// render the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
+ 		
+ 		glfwSwapBuffers(window);
+        glfwPollEvents();
+	}
 
-		glutSwapBuffers();
+	// CALCULATE FPS
+	void calculateFPS(void) {
+		currentTime = glfwGetTime();
+	    frameCount++;
+	    // If a second has passed.
+	    if ( currentTime - previousTime >= 1.0 )
+	    {
+	        // save the frame count
+	        hist.addItem(std::to_string(currentTime), std::to_string(frameCount));
+
+	        frameCount = 0;
+	        previousTime = currentTime;
+	    }
 	}
 };
-
 
 
 int main(int argc, char **argv) {
 
 	Manager manager(argc, argv);	
 
-	// register callbacks
-	// glutDisplayFunc(manager.renderScene);
 
 	// enter GLUT event processing cycle
 	// glutMainLoop();
 
-	while(1==1) {
-		glutMainLoopEvent();
-		manager.renderScene();
-	}
 	
 	return 0;
 }
