@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# Don't include the lib directory
+lib
