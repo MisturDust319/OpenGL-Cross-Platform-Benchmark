@@ -13,7 +13,8 @@ Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full 
 
 // init to save to "history.txt" file
 History::History() {
-	fileName = "history.txt";
+	fileName = "history";
+	fileExtension = "csv";
 }
 // init to filename
 History::History(std::string& fileName) {
@@ -21,19 +22,34 @@ History::History(std::string& fileName) {
 }
 
 // set file name
-void History::setFilename(std::string& fileName) {
+void History::setFilename(const std::string& fileName) {
 	this->fileName = fileName;
+}
+//set file extension
+void History::setFileExtension(const std::string& fileExtension) {
+	this->fileExtension = fileExtension;
 }
 
 // places data into history
-void History::addItem(std::string& data) {
+void History::addItem(const std::string& data) {
 	history.push_back(data);
 }
 
 // saves history to disk
 bool History::saveHistory() {
 	// try to open file
-	file.open(fileName);
+	file.open(fileName + fileExtension);
+
+	// check if file already exists
+	// if yes, add a number to filename
+	int fileNum = 1;
+	while(!((bool) file)) {
+		file.close(); 
+		// close the old file
+		file.open(fileName + std::to_string(fileNum) + fileExtension);
+		// open a new file w/ a num in the name
+		fileNum++; // increment file num just in case
+	}
 
 	// if history has no values,
 	// return false

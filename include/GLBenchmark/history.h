@@ -18,6 +18,8 @@ private:
 	std::deque<std::string> history;
 	// file name
 	std::string fileName;
+	// file extension
+	std::string fileExtension;
 	// file object
 	std::ofstream file;
 
@@ -28,9 +30,11 @@ public:
 	History(std::string&);
 
 	// set file name
-	void setFilename(std::string&);
+	void setFilename(const std::string&);
+	// set extension
+	void setFileExtension(const std::string&);
 	// insert item into history
-	void addItem(std::string&);
+	void addItem(const std::string&);
 
 	// save history to disk
 	// return true if succesful

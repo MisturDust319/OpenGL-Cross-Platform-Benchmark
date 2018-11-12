@@ -11,8 +11,9 @@ Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full 
 
 // set the filename to "fps_record.csv"
 FPSHistory::FPSHistory() {
-	std::string name = "fps_record.csv";
-	this->setFilename(name);
+	// set file name and extension
+	this->setFilename("fps_record");
+	this->setFileExtension("csv");
 
 	// add in headers
 	std::string data = "time (s), fps";
