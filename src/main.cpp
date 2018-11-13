@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include <src/shader.cpp>
+#include <GLBenchmark/FPS_history.h>
 
 // settings
 class Manager {
@@ -25,6 +26,15 @@ private:
 
     const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
+
+	// time and frame tracking info
+	int frame = 0, fps = 0, time, timebase=0;
+
+	// fps tracking object
+	FPSHistory hist;
+
+	// this var sets the stop time in ms
+	int stopTime = 3000;
 
 public:
 	// CONSTRUCTOR
@@ -71,7 +81,7 @@ public:
 	}
 
 	// RENDER INSTRUCTIONS
-	void renderScene(void) {
+	void renderScene() {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -91,6 +101,32 @@ public:
 
 		glutSwapBuffers();
 	}
+
+	// check time
+	// from: http://www.lighthouse3d.com/tutorials/glut-tutorial/frames-per-second/
+	void checkTime() {
+		frame++;
+		time = glutGet(GLUT_ELAPSED_TIME);
+
+		if( time - timebase > 1000 ) {
+			// get FPS
+			fps = frame*1000.0/(time - timebase);
+			timebase = time;
+			// save the timestamp and FPS
+			hist.addItem(std::to_string(time), std::to_string(fps));
+
+			frame = 0;
+
+			// also, if time is greater than the stop time
+			// save the fps data and stop the program
+			if(time >= stopTime) {
+				// save fps data
+				hist.saveHistory();
+				// stop GLUT window, ending program
+				exit(0);
+			}
+		}
+	}
 };
 
 
@@ -108,6 +144,7 @@ int main(int argc, char **argv) {
 	while(1==1) {
 		glutMainLoopEvent();
 		manager.renderScene();
+		manager.checkTime();
 	}
 	
 	return 0;
