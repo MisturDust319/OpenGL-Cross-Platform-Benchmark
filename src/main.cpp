@@ -34,7 +34,7 @@ private:
 	FPSHistory hist;
 
 	// this var sets the stop time in ms
-	int stopTime = 3000;
+	int stopTime = 60000;
 
 public:
 	// CONSTRUCTOR

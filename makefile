@@ -1,5 +1,5 @@
 target       := a.out
-sources      := src/main.cpp src/FPShistory.cpp src/history.cpp src/GLAD/glad.c src/shader.cpp
+sources      := src/main.cpp src/FPShistory.cpp src/history.cpp src/shader.cpp
 
 includes     := . include
 

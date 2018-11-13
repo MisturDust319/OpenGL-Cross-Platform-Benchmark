@@ -27,7 +27,7 @@ void History::setFilename(const std::string& fileName) {
 }
 //set file extension
 void History::setFileExtension(const std::string& fileExtension) {
-	this->fileExtension = fileExtension;
+	this->fileExtension = "." + fileExtension;
 }
 
 // places data into history
@@ -42,14 +42,6 @@ bool History::saveHistory() {
 
 	// check if file already exists
 	// if yes, add a number to filename
-	int fileNum = 1;
-	while(!((bool) file)) {
-		file.close(); 
-		// close the old file
-		file.open(fileName + std::to_string(fileNum) + fileExtension);
-		// open a new file w/ a num in the name
-		fileNum++; // increment file num just in case
-	}
 
 	// if history has no values,
 	// return false

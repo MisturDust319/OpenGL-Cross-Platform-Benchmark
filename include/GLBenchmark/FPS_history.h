@@ -17,7 +17,7 @@ public:
 	// constructor
 	FPSHistory();
 	// addItem overload that simplifies including
-	// FPS, timestamp
+	// timestamp, FPS
 	void addItem(const std::string&, const std::string&);
 };
 

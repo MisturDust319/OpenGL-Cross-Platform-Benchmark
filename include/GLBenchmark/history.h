@@ -23,7 +23,6 @@ private:
 	// file object
 	std::ofstream file;
 
-
 public:	
 	//constructors
 	History();
