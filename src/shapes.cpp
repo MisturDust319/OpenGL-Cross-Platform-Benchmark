@@ -28,13 +28,9 @@ glm::vec3 Shape::getOrigin() {
 }
 
 float* Shape::getVertices() {
-	int size = getNumberVertices();
-	// get number of vertices, then allocate
-	// an array of that size in mem
-	float* vertex_array = new float[size];
-
-	// return vertex_array
-	return vertex_array;
+	
+	// return vector as array
+	return &vertices[0];
 }
 
 
