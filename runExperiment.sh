@@ -5,6 +5,20 @@ if [ ! -d "./results" ]; then
 	mkdir "./results"
 fi
 
+# check if linux, mac, or other
+if [ "$(uname)" == "Darwin" ]; then
+    # Do something under Mac OS X platform
+    echo "Running Mac Makefile"
+    make -f makefile.mac
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # Do something under GNU/Linux platform
+    echo "Running Linux Makefile"
+    make -f makefile.linux
+else
+	echo "Running Windows Cygwin Makefile"
+    make
+fi
+
 counter=1
 until [[ $counter -eq 6 ]]; do
 	echo "Program run $counter starting"
