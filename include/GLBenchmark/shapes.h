@@ -7,8 +7,10 @@ Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full 
 #ifndef SHAPES_H
 #define SHAPES_H
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <vector> 
+
+#include <vector>
 
 class Shape {
 private:
@@ -16,14 +18,46 @@ private:
 	glm::vec3 origin;
 	// the vertices of the shape
 	std::vector<float> vertices;
+	// indices of the shape
+	std::vector<int> indices;
+
+	// buffer IDs
+	GLuint VAO, VBO, EBO;
 
 public:
+	// constructor
+	Shape(int, float[], int, int[], int, glm::vec3 );
+
+	// BUFFER BIND FUNCTIONS
+	// BIND BUFFERS
+	// bind VAO
+	void bindVAO();
+	// bind VBO
+	// void bindVBO();
+	// bind EBO
+	// void bindEBO();
+	// INIT BUFFERS
+	// initialize VAO
+	// void initVAO();
+	// initialize VBO
+	void initVBO();
+	// initialize EBO
+	void initEBO();
+	// DRAW FUNCTION
+	virtual void draw();
+
+	// GETTERS AND SETTERS
 	// set the vertices
 	void setVertices(std::vector<float>&);
 	void setVertices(float[], int);
+	// set indices
+	// void setVertices(std::vector<float>&);
+	void setIndices(float[], int);
 
 	// get number of vertices
 	int getNumberVertices();
+	// get number of indices
+	int getNumberIndices();
 
 	// set origin of shape
 	void setOrigin(glm::vec3&);
@@ -32,16 +66,10 @@ public:
 	// get origin of the shape
 	glm::vec3 getOrigin();
 
-	// to return a float array pointer to
-	// an array of vertices
-	virtual float* getVertices();
-};
-
-// triangle inherits from shape
-class Triangle : Shape {
-public:
-	// constructor
-	Triangle();
+	// return pointer to vertice array
+	float* getVertices();
+	// return pointer to index array
+	float* getIndices();
 };
 
 #endif // SHAPES_H
