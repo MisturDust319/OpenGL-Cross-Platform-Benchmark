@@ -1,12 +1,17 @@
 
 #include <GL/glew.h>
 #include <gl/freeglut.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <cmath>
 
 #include <src/shader.cpp>
 #include <GLBenchmark/FPS_history.h>
+#include <GLBenchmark/cube.h>
+
+glm::vec3 origin = glm::vec3(0);
+Cube cube(1, origin);
 
 // settings
 class Manager {
@@ -15,14 +20,14 @@ private:
 	Shader shader;
 
 	// buffers
-	GLuint VBO, VAO;
+	// GLuint VBO, VAO;
 
 	// temp vert obj
-	float vertices[9] = {
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-         0.0f,  0.5f, 0.0f   // top 
-    };
+	// float vertices[9] = {
+ //         0.5f, -0.5f, 0.0f,  // bottom right
+ //        -0.5f, -0.5f, 0.0f,  // bottom left
+ //         0.0f,  0.5f, 0.0f   // top 
+ //    };
 
     const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
@@ -58,27 +63,32 @@ public:
 		shader.use();
 
 	    // INIT BUFFERS
-	    glGenVertexArrays(1, &VAO);
-	    glGenBuffers(1, &VBO);
-	    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-	    glBindVertexArray(VAO);
+	    // glGenVertexArrays(1, &VAO);
+	    // glGenBuffers(1, &VBO);
+	    // // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	    // glBindVertexArray(VAO);
 
-	    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	    glEnableVertexAttribArray(0);
+	    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	    // glEnableVertexAttribArray(0);
 
-	    glBindVertexArray(VAO);
+	    // glBindVertexArray(VAO);
+
+		// select clear color
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		
+	    cube.init();
 	}
 
 	// DESTRUCTOR
-	~Manager() {
-		// optional: de-allocate all resources once they've outlived their purpose:
-	    // ------------------------------------------------------------------------
-	    glDeleteVertexArrays(1, &VAO);
-	    glDeleteBuffers(1, &VBO);
-	}
+	// ~Manager() {
+	// 	// optional: de-allocate all resources once they've outlived their purpose:
+	//     // ------------------------------------------------------------------------
+	//     glDeleteVertexArrays(1, &VAO);
+	//     glDeleteBuffers(1, &VBO);
+	// }
 
 	// RENDER INSTRUCTIONS
 	void renderScene() {
@@ -92,12 +102,14 @@ public:
 		// glEnd();
 
 		// update shader uniform
-		float timeValue = glutGet(GLUT_ELAPSED_TIME);
-		float blueValue = sin(timeValue/1000) / 2.0f + 0.5f;
-		shader.setFloat("ourColor", blueValue);
+		// float timeValue = glutGet(GLUT_ELAPSED_TIME);
+		// float blueValue = sin(timeValue/1000) / 2.0f + 0.5f;
+		// shader.setFloat("ourColor", blueValue);
 
 		// render the triangle
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        cube.draw();
+
 
 		glutSwapBuffers();
 	}

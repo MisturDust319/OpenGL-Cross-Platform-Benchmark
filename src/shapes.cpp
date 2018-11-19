@@ -1,33 +1,41 @@
+/*
+This file is part of OpenGL-Cross-Platform-Benchmark which is released under the MIT License.
+Copyright Stan Slupecki 2018
+Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full license details.
+*/
+
 #include <GLBenchmark/shapes.h>
 #include <vector>
 
+// using these objects
+// create a new shape
+// init it
+// use draw to render it
+
 //constructor
 Shape::Shape(int ID,
-		float[] vertices, int numVertices,
-		int[] indices, int numIndices,
 		glm::vec3 origin
 	) {
 	// set the buffers to ID
-	VAO = VBO = EBO = ID;
+	// VAO = VBO = EBO = ID;
 
 	// set origin
-	setOrigin(origin);
+	setOrigin(origin);	
+}
 
-	//store vertices
-	Shape::setVertices(vertices, numVertices);
-	//store indices
-	Shape::setIndices(indices, numIndices);
-
+void Shape::init() {
+	
 	// generate and bind buffers
-	glGenBuffers(1, &VAO); // VAO
+	glGenVertexArrays(1, &VAO); // VAO
 	glGenBuffers(1, &VBO); // VBO
-	glGenBuffers(1, &EBO); // EBO
+	// glGenBuffers(1, &EBO); // EBO
+
 	// 1. bind VAO
-	initVAO();
-	// 2. copy verts into vertex buffer
+	bindVAO();
+	// 2. bind then copy verts into vertex buffer
 	initVBO();
-	// 3. copy inidices into index buffer
-	initEBO();
+	// 3. bind then copy inidices into index buffer
+	// initEBO();
 	// 4. set vertex attribute pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -39,19 +47,21 @@ void Shape::bindVAO() {
 
 void Shape::initVBO() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, getNumberVertices(),
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * getNumberVertices(),
 		getVertices(), GL_STATIC_DRAW);
 }
 void Shape::initEBO() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ARRAY_BUFFER, getNumberIndices(),
+	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * getNumberIndices(),
 		getIndices(), GL_STATIC_DRAW);
 }
 
 void Shape::draw() {
 	// ensure this Shape's VAO is bound
 	bindVAO();
-	glDrawElements(GL_TRIANGLES, getVertices, GL)
+	// init(); // init the shape
+	// glDrawElements(GL_TRIANGLES, getNumberIndices(), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, getNumberVertices());
 }
 
 // set the vertices to an existing vertex of vertices
@@ -65,7 +75,7 @@ void Shape::setVertices(float* verts, int size) {
 	}
 }
 
-void Shape::setIndices(float* indices, int size) {
+void Shape::setIndices(int* indices, int size) {
 	for (int i = 0; i < size; i++) {
 		vertices.emplace_back(indices[i]);
 	}
@@ -95,20 +105,8 @@ float* Shape::getVertices() {
 	return &vertices[0];
 }
 
-float* Shape::getIndices() {
+int* Shape::getIndices() {
 	// return vector as array
 	return &indices[0];
-}
-
-// TRIANGLE
-Triangle::Triangle() {
-	float verts[] = {
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		0.0f,  0.5f, 0.0f   // top 
-	};
-
-	setVertices(verts, sizeof(verts));
-	setOrigin(0, 0, 0);
 }
 

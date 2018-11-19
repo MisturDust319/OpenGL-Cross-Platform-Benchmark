@@ -26,7 +26,10 @@ private:
 
 public:
 	// constructor
-	Shape(int, float[], int, int[], int, glm::vec3 );
+	Shape(int, glm::vec3 );
+
+	// Initialize the shape
+	void init();
 
 	// BUFFER BIND FUNCTIONS
 	// BIND BUFFERS
@@ -44,7 +47,7 @@ public:
 	// initialize EBO
 	void initEBO();
 	// DRAW FUNCTION
-	virtual void draw();
+	void draw();
 
 	// GETTERS AND SETTERS
 	// set the vertices
@@ -52,7 +55,7 @@ public:
 	void setVertices(float[], int);
 	// set indices
 	// void setVertices(std::vector<float>&);
-	void setIndices(float[], int);
+	void setIndices(int[], int);
 
 	// get number of vertices
 	int getNumberVertices();
@@ -69,7 +72,7 @@ public:
 	// return pointer to vertice array
 	float* getVertices();
 	// return pointer to index array
-	float* getIndices();
+	int* getIndices();
 };
 
 #endif // SHAPES_H
