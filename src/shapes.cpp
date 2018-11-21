@@ -28,14 +28,14 @@ void Shape::init() {
 	// generate and bind buffers
 	glGenVertexArrays(1, &VAO); // VAO
 	glGenBuffers(1, &VBO); // VBO
-	// glGenBuffers(1, &EBO); // EBO
+	glGenBuffers(1, &EBO); // EBO
 
 	// 1. bind VAO
 	bindVAO();
 	// 2. bind then copy verts into vertex buffer
 	initVBO();
 	// 3. bind then copy inidices into index buffer
-	// initEBO();
+	initEBO();
 	// 4. set vertex attribute pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -52,7 +52,7 @@ void Shape::initVBO() {
 }
 void Shape::initEBO() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * getNumberIndices(),
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * getNumberIndices(),
 		getIndices(), GL_STATIC_DRAW);
 }
 
@@ -60,8 +60,8 @@ void Shape::draw() {
 	// ensure this Shape's VAO is bound
 	bindVAO();
 	// init(); // init the shape
-	// glDrawElements(GL_TRIANGLES, getNumberIndices(), GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLES, 0, getNumberVertices());
+	glDrawElements(GL_TRIANGLES, getNumberIndices(), GL_UNSIGNED_INT, 0);
+	// glDrawArrays(GL_TRIANGLES, 0, getNumberVertices());
 }
 
 // set the vertices to an existing vertex of vertices
@@ -71,13 +71,13 @@ void Shape::setVertices(std::vector<float>& verts) {
 // set the vertices to array of floats
 void Shape::setVertices(float* verts, int size) {
 	for (int i = 0; i < size; i++) {
-		vertices.emplace_back(verts[i]);
+		this->vertices.emplace_back(verts[i]);
 	}
 }
 
-void Shape::setIndices(int* indices, int size) {
+void Shape::setIndices(unsigned int* indices, int size) {
 	for (int i = 0; i < size; i++) {
-		vertices.emplace_back(indices[i]);
+		this->indices.emplace_back(indices[i]);
 	}
 }
 
@@ -105,7 +105,7 @@ float* Shape::getVertices() {
 	return &vertices[0];
 }
 
-int* Shape::getIndices() {
+unsigned int* Shape::getIndices() {
 	// return vector as array
 	return &indices[0];
 }

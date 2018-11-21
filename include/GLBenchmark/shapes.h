@@ -19,7 +19,7 @@ private:
 	// the vertices of the shape
 	std::vector<float> vertices;
 	// indices of the shape
-	std::vector<int> indices;
+	std::vector<unsigned int> indices;
 
 	// buffer IDs
 	GLuint VAO, VBO, EBO;
@@ -55,7 +55,7 @@ public:
 	void setVertices(float[], int);
 	// set indices
 	// void setVertices(std::vector<float>&);
-	void setIndices(int[], int);
+	void setIndices(unsigned int[], int);
 
 	// get number of vertices
 	int getNumberVertices();
@@ -72,7 +72,7 @@ public:
 	// return pointer to vertice array
 	float* getVertices();
 	// return pointer to index array
-	int* getIndices();
+	unsigned int* getIndices();
 };
 
 #endif // SHAPES_H
