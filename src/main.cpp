@@ -2,6 +2,9 @@
 #include <GL/glew.h>
 #include <gl/freeglut.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 #include <iostream>
 #include <cmath>
@@ -19,15 +22,10 @@ private:
 	// shader object
 	Shader shader;
 
-	// buffers
-	// GLuint VBO, VAO;
-
-	// temp vert obj
-	// float vertices[9] = {
- //         0.5f, -0.5f, 0.0f,  // bottom right
- //        -0.5f, -0.5f, 0.0f,  // bottom left
- //         0.0f,  0.5f, 0.0f   // top 
- //    };
+	// matrices
+	// mModel is determined by the shape's origin 
+	glm::mat4 view; // view matrix
+	glm::mat4 mProjection; // projection matrix
 
     const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
@@ -41,6 +39,9 @@ private:
 	// this var sets the stop time in ms
 	int stopTime = 60000;
 
+	// for toggling wireframe
+	bool toggleWireframe = false;
+
 public:
 	// CONSTRUCTOR
 	Manager(int argc, char** argv) {
@@ -52,64 +53,42 @@ public:
 		glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 		glutInitWindowPosition(100,100);
 		glutInitWindowSize(SCR_WIDTH, SCR_HEIGHT);
-		glutCreateWindow("Lighthouse3D - GLUT Tutorial");
+		glutCreateWindow("OpenGL Benchmark");
 
 		// init GLEW
 		glewInit();
 
+		// enable GL depth test
+		glEnable(GL_DEPTH_TEST);
+		// select clear color
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+        // initialize matrices
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        mProjection =
+        glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		
 		// init shader
 		shader.init("src/shader.vert","src/shader.frag");
 		// use the shader object
 		shader.use();
+		// pass view and projection matrices to shader
+		shader.setMat4("projection", mProjection);
+		shader.setMat4("view",view);
 
-	    // INIT BUFFERS
-	    // glGenVertexArrays(1, &VAO);
-	    // glGenBuffers(1, &VBO);
-	    // // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-	    // glBindVertexArray(VAO);
-
-	    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	    // glEnableVertexAttribArray(0);
-
-	    // glBindVertexArray(VAO);
-
-		// select clear color
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		
 	    cube.init();
 	}
 
-	// DESTRUCTOR
-	// ~Manager() {
-	// 	// optional: de-allocate all resources once they've outlived their purpose:
-	//     // ------------------------------------------------------------------------
-	//     glDeleteVertexArrays(1, &VAO);
-	//     glDeleteBuffers(1, &VBO);
-	// }
-
 	// RENDER INSTRUCTIONS
 	void renderScene() {
-
+		// clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// glBegin(GL_TRIANGLES);
-		// 	glVertex3f(-0.5,-0.5,0.0);
-		// 	glVertex3f(0.5,0.0,0.0);
-		// 	glVertex3f(0.0,0.5,0.0);
-		// glEnd();
-
-		// update shader uniform
-		// float timeValue = glutGet(GLUT_ELAPSED_TIME);
-		// float blueValue = sin(timeValue/1000) / 2.0f + 0.5f;
-		// shader.setFloat("ourColor", blueValue);
-
-		// render the triangle
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
+		// draw the objects
+		glm::mat4 model;
+		model = glm::translate(model, origin);
+		shader.setMat4("model", model);
         cube.draw();
-
 
 		glutSwapBuffers();
 	}
@@ -129,12 +108,20 @@ public:
 
 			frame = 0;
 
+			if(toggleWireframe) {
+				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+				toggleWireframe = false;
+			} else {
+				glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+				toggleWireframe = true;
+			}
+
 			// also, if time is greater than the stop time
 			// save the fps data and stop the program
 			if(time >= stopTime) {
 				// save fps data
 				hist.saveHistory();
-				// stop GLUT window, ending program
+				// end program
 				exit(0);
 			}
 		}
@@ -146,12 +133,6 @@ public:
 int main(int argc, char **argv) {
 
 	Manager manager(argc, argv);	
-
-	// register callbacks
-	// glutDisplayFunc(manager.renderScene);
-
-	// enter GLUT event processing cycle
-	// glutMainLoop();
 
 	while(1==1) {
 		glutMainLoopEvent();
