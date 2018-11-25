@@ -40,11 +40,6 @@ private:
 	// this var sets the stop time in ms
 	int stopTime = 60000;
 
-	// for toggling wireframe
-	bool toggleWireframe = false;
-
-	// index to track current cube origin
-	int index;
 	// list of origins to generate cubes
 	std::vector<glm::vec3> origins;
 	// list of cubes
@@ -159,8 +154,6 @@ public:
 		origins.pop_back(); // remove last origin
 	    // init first cube
 	    cubes.back().init();
-	    // set index to 1
-	    index = 1;
 	}
 
 	// RENDER INSTRUCTIONS
@@ -194,8 +187,6 @@ public:
 	        cube.draw();	
 		}
 
-		
-
 		glutSwapBuffers();
 	}
 
@@ -213,14 +204,6 @@ public:
 			hist.addItem(std::to_string(time), std::to_string(fps));
 
 			frame = 0;
-
-			if(toggleWireframe) {
-				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-				toggleWireframe = false;
-			} else {
-				glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-				toggleWireframe = true;
-			}
 
 			// create and init a new cube
 			cubes.push_back(origins.back());
