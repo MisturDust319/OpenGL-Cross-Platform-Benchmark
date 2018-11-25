@@ -14,7 +14,7 @@ Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full 
 class Cube : public Shape {
 public:
 	// CONSTRUCTOR
-	Cube(int, glm::vec3);
+	Cube(const glm::vec3);
 };
 
 #endif

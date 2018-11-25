@@ -14,8 +14,8 @@
 #include <GLBenchmark/FPS_history.h>
 #include <GLBenchmark/cube.h>
 
-glm::vec3 origin = glm::vec3(15.0, 10.0, -30.0);
-Cube cube(1, origin);
+// glm::vec3 origin = glm::vec3(15.0, 10.0, -30.0);
+// Cube cube(1, origin);
 
 // settings
 class Manager {
@@ -42,6 +42,13 @@ private:
 
 	// for toggling wireframe
 	bool toggleWireframe = false;
+
+	// index to track current cube origin
+	int index;
+	// list of origins to generate cubes
+	std::vector<glm::vec3> origins;
+	// list of cubes
+	std::vector<Cube> cubes;
 
 public:
 	// CONSTRUCTOR
@@ -77,7 +84,83 @@ public:
 		shader.setMat4("projection", mProjection);
 		shader.setMat4("view",view);
 
-	    cube.init();
+	    // cube.init();
+	    // create the cube objects, but don't init them
+		// create list of origins to generate cubes with
+		glm::vec3 org[60] = {
+			glm::vec3(-15.0, 10.0, -30.0),
+			glm::vec3(-12.0, 10.0, -30.0),
+			glm::vec3(-9.0, 10.0, -30.0),
+			glm::vec3(-6.0, 10.0, -30.0),
+			glm::vec3(-3.0, 10.0, -30.0),
+			glm::vec3(0.0, 10.0, -30.0),
+			glm::vec3(3.0, 10.0, -30.0),
+			glm::vec3(6.0, 10.0, -30.0),
+			glm::vec3(9.0, 10.0, -30.0),
+			glm::vec3(12.0, 10.0, -30.0),
+			glm::vec3(15.0, 10.0, -30.0),
+			glm::vec3(-15.0, 6.2, -30.0),
+			glm::vec3(-12.0, 6.2, -30.0),
+			glm::vec3(-9.0, 6.2, -30.0),
+			glm::vec3(-6.0, 6.2, -30.0),
+			glm::vec3(-3.0, 6.2, -30.0),
+			glm::vec3(0.0, 6.2, -30.0),
+			glm::vec3(3.0, 6.2, -30.0),
+			glm::vec3(6.0, 6.2, -30.0),
+			glm::vec3(9.0, 6.2, -30.0),
+			glm::vec3(12.0, 6.2, -30.0),
+			glm::vec3(15.0, 6.2, -30.0),
+			glm::vec3(-15.0, 2.4, -30.0),
+			glm::vec3(-12.0, 2.4, -30.0),
+			glm::vec3(-9.0, 2.4, -30.0),
+			glm::vec3(-6.0, 2.4, -30.0),
+			glm::vec3(-3.0, 2.4, -30.0),
+			glm::vec3(0.0, 2.4, -30.0),
+			glm::vec3(3.0, 2.4, -30.0),
+			glm::vec3(6.0, 2.4, -30.0),
+			glm::vec3(9.0, 2.4, -30.0),
+			glm::vec3(12.0, 2.4, -30.0),
+			glm::vec3(15.0, 2.4, -30.0),
+			glm::vec3(-15.0, -1.4, -30.0),
+			glm::vec3(-12.0, -1.4, -30.0),
+			glm::vec3(-9.0, -1.4, -30.0),
+			glm::vec3(-6.0, -1.4, -30.0),
+			glm::vec3(-3.0, -1.4, -30.0),
+			glm::vec3(0.0, -1.4, -30.0),
+			glm::vec3(3.0, -1.4, -30.0),
+			glm::vec3(6.0, -1.4, -30.0),
+			glm::vec3(9.0, -1.4, -30.0),
+			glm::vec3(12.0, -1.4, -30.0),
+			glm::vec3(15.0, -1.4, -30.0),
+			glm::vec3(-15.0, -4.2, -30.0),
+			glm::vec3(-12.0, -4.2, -30.0),
+			glm::vec3(-9.0, -4.2, -30.0),
+			glm::vec3(-6.0, -4.2, -30.0),
+			glm::vec3(-3.0, -4.2, -30.0),
+			glm::vec3(0.0, -4.2, -30.0),
+			glm::vec3(3.0, -4.2, -30.0),
+			glm::vec3(6.0, -4.2, -30.0),
+			glm::vec3(9.0, -4.2, -30.0),
+			glm::vec3(12.0, -4.2, -30.0),
+			glm::vec3(15.0, -4.2, -30.0),
+			glm::vec3(-15.0, -8.0, -30.0),
+			glm::vec3(-12.0, -8.0, -30.0),
+			glm::vec3(-9.0, -8.0, -30.0),
+			glm::vec3(-6.0, -8.0, -30.0),
+			glm::vec3(-3.0, -8.0, -30.0)
+		};
+		for(int i = 0; i < 60; i++) {
+			origins.push_back(org[i]);
+		}
+
+		// pop an origin from origins, 
+		// use it to init a starting cube
+		cubes.push_back(origins.back());
+		origins.pop_back(); // remove last origin
+	    // init first cube
+	    cubes.back().init();
+	    // set index to 1
+	    index = 1;
 	}
 
 	// RENDER INSTRUCTIONS
@@ -88,12 +171,30 @@ public:
 		// get an angle
 		float angle = glutGet(GLUT_ELAPSED_TIME) / 100.0;
 
-		// draw the objects
-		glm::mat4 model;
-		model = glm::translate(model, origin);
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-		shader.setMat4("model", model);
-        cube.draw();
+		// iterate over cubes vector
+		for(std::vector<Cube>::iterator it = cubes.begin();
+			it != cubes.end();
+			++it) {
+			// get the current cube object
+			Cube cube = *it;
+			glm::vec3 origin = cube.getOrigin();
+
+			// draw the objects
+			// create model matrix
+			glm::mat4 model;
+			// note: transformations should be done in this order:
+			// scale -> rotate -> transform
+			// but the calculations must be done in reverse
+			// translate model
+			model = glm::translate(model, origin);
+			// rotate model
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+			// give this model matrix to the shader
+			shader.setMat4("model", model);
+	        cube.draw();	
+		}
+
+		
 
 		glutSwapBuffers();
 	}
@@ -120,6 +221,11 @@ public:
 				glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 				toggleWireframe = true;
 			}
+
+			// create and init a new cube
+			cubes.push_back(origins.back());
+			origins.pop_back(); // remove last origin
+		    cubes.back().init();
 
 			// also, if time is greater than the stop time
 			// save the fps data and stop the program

@@ -13,9 +13,7 @@ Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full 
 // use draw to render it
 
 //constructor
-Shape::Shape(int ID,
-		glm::vec3 origin
-	) {
+Shape::Shape(const glm::vec3 origin) {
 	// set the buffers to ID
 	// VAO = VBO = EBO = ID;
 
@@ -62,20 +60,21 @@ void Shape::draw() {
 	// init(); // init the shape
 	glDrawElements(GL_TRIANGLES, getNumberIndices(), GL_UNSIGNED_INT, 0);
 	// glDrawArrays(GL_TRIANGLES, 0, getNumberVertices());
+	glBindVertexArray(0);
 }
 
 // set the vertices to an existing vertex of vertices
-void Shape::setVertices(std::vector<float>& verts) {
+void Shape::setVertices(const std::vector<float>& verts) {
 	vertices = verts;
 }
 // set the vertices to array of floats
-void Shape::setVertices(float* verts, int size) {
+void Shape::setVertices(const float* verts, const int size) {
 	for (int i = 0; i < size; i++) {
 		this->vertices.emplace_back(verts[i]);
 	}
 }
 
-void Shape::setIndices(unsigned int* indices, int size) {
+void Shape::setIndices(const unsigned int* indices, const int size) {
 	for (int i = 0; i < size; i++) {
 		this->indices.emplace_back(indices[i]);
 	}
@@ -89,7 +88,7 @@ int Shape::getNumberIndices() {
 	return indices.size();
 }
 
-void Shape::setOrigin(glm::vec3& shapeOrigin) {
+void Shape::setOrigin(const glm::vec3& shapeOrigin) {
 	origin = shapeOrigin;
 }
 void Shape::setOrigin(float x, float y, float z) {

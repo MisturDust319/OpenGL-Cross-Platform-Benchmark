@@ -7,8 +7,8 @@ Go to https://misturdust319.github.io/OpenGL-Cross-Platform-Benchmark/ for full 
 #include <GLBenchmark/cube.h>
 
 // CUBE OBJECT
-Cube::Cube(int ID, glm::vec3 origin)
-	: Shape(ID, origin) {
+Cube::Cube(const glm::vec3 origin)
+	: Shape(origin) {
 
 	// init vertices
 	float vertices[] = {

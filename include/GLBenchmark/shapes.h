@@ -26,7 +26,7 @@ private:
 
 public:
 	// constructor
-	Shape(int, glm::vec3 );
+	Shape(const glm::vec3 );
 
 	// Initialize the shape
 	void init();
@@ -51,11 +51,11 @@ public:
 
 	// GETTERS AND SETTERS
 	// set the vertices
-	void setVertices(std::vector<float>&);
-	void setVertices(float[], int);
+	void setVertices(const std::vector<float>&);
+	void setVertices(const float[], const int);
 	// set indices
 	// void setVertices(std::vector<float>&);
-	void setIndices(unsigned int[], int);
+	void setIndices(const unsigned int[], const int);
 
 	// get number of vertices
 	int getNumberVertices();
@@ -63,8 +63,8 @@ public:
 	int getNumberIndices();
 
 	// set origin of shape
-	void setOrigin(glm::vec3&);
-	void setOrigin(float, float, float);
+	void setOrigin(const glm::vec3&);
+	void setOrigin(const float, const float, const float);
 
 	// get origin of the shape
 	glm::vec3 getOrigin();
