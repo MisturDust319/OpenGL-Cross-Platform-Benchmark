@@ -8,12 +8,13 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 #include <src/shader.cpp>
 #include <GLBenchmark/FPS_history.h>
 #include <GLBenchmark/cube.h>
 
-glm::vec3 origin = glm::vec3(0);
+glm::vec3 origin = glm::vec3(15.0, 10.0, -30.0);
 Cube cube(1, origin);
 
 // settings
@@ -84,9 +85,13 @@ public:
 		// clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// get an angle
+		float angle = glutGet(GLUT_ELAPSED_TIME) / 100.0;
+
 		// draw the objects
 		glm::mat4 model;
 		model = glm::translate(model, origin);
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 		shader.setMat4("model", model);
         cube.draw();
 
