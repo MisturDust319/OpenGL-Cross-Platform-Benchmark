@@ -55,8 +55,11 @@ private:
 
 public:
 	// CONSTRUCTOR
-	Manager(int argc, char** argv) {
+	Manager() {
 
+		// dummy values
+		int argc = 1;
+  		char *argv[1] = {(char*)"Something"};
 		// init GLUT and create Window
 		glutInit(&argc, argv);
 		glutInitContextVersion(3,3); // init to OpenGL v 3.3 
@@ -65,6 +68,11 @@ public:
 		glutInitWindowPosition(100,100);
 		glutInitWindowSize(SCR_WIDTH, SCR_HEIGHT);
 		glutCreateWindow("OpenGL Benchmark");
+
+		// print OpenGL info to terminal
+		std::cout << "GL Renderer: " << glGetString(GL_RENDERER) << std::endl
+			<< "GL Version: " << glGetString(GL_VERSION) << std::endl
+		<< "GL Vendor: " << glGetString(GL_VENDOR);
 
 		// init GLEW
 		glewInit();
@@ -230,17 +238,21 @@ public:
 	}
 };
 
+Manager manager;	
+
+
+void displayCallback() {
+	manager.renderScene();
+	manager.checkTime();
+}
 
 
 int main(int argc, char **argv) {
 
-	Manager manager(argc, argv);	
+	glutDisplayFunc(displayCallback);
+	glutIdleFunc(displayCallback);
 
-	while(1==1) {
-		glutMainLoopEvent();
-		manager.renderScene();
-		manager.checkTime();
-	}
+	glutMainLoop();
 	
 	return 0;
 }
