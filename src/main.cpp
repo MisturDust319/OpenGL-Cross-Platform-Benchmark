@@ -71,10 +71,10 @@ public:
 
 		// print OpenGL info to terminal
 		std::cout << "GL Renderer: " << glGetString(GL_RENDERER) << std::endl
-			<< "GL Version: " << glGetString(GL_VERSION) << std::endl
-		<< "GL Vendor: " << glGetString(GL_VENDOR);
+      << "GL Version: " << glGetString(GL_VERSION) << std::endl
+      << "GL Vendor: " << glGetString(GL_VENDOR);
 
-		// init GLEW
+    // init GLEW
 		glewInit();
 
 		// enable GL depth test
