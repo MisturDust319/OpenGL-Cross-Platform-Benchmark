@@ -5,7 +5,9 @@
 #include <OpenGL/glu.h>
 #include <GL/freeglut.h>
 #else
-#include <gl/freeglut.h>
+#include <GL/freeglut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #endif
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
