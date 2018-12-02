@@ -9,11 +9,11 @@ fi
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
     echo "Running Mac Makefile"
-    make -f makefile.mac
+    make -f makefile.osx
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # Do something under GNU/Linux platform
     echo "Running Linux Makefile"
-    make -f makefile.linux
+    make -f makefile.fedora
 else
 	echo "Running Windows Cygwin Makefile"
     make
