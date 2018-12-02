@@ -5,7 +5,9 @@
 #include <OpenGL/glu.h>
 #include <GL/freeglut.h>
 #else
-#include <gl/freeglut.h>
+#include <GL/freeglut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #endif
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -53,8 +55,11 @@ private:
 
 public:
 	// CONSTRUCTOR
-	Manager(int argc, char** argv) {
+	Manager() {
 
+		// dummy values
+		int argc = 1;
+  		char *argv[1] = {(char*)"Something"};
 		// init GLUT and create Window
 		glutInit(&argc, argv);
 		glutInitContextVersion(3,3); // init to OpenGL v 3.3 
@@ -66,10 +71,10 @@ public:
 
 		// print OpenGL info to terminal
 		std::cout << "GL Renderer: " << glGetString(GL_RENDERER) << std::endl
-			<< "GL Version: " << glGetString(GL_VERSION) << std::endl
-			<< "GL Vendor: " << glGetString(GL_VENDOR);
+      << "GL Version: " << glGetString(GL_VERSION) << std::endl
+      << "GL Vendor: " << glGetString(GL_VENDOR);
 
-		// init GLEW
+    // init GLEW
 		glewInit();
 
 		// enable GL depth test
@@ -233,17 +238,21 @@ public:
 	}
 };
 
+Manager manager;	
+
+
+void displayCallback() {
+	manager.renderScene();
+	manager.checkTime();
+}
 
 
 int main(int argc, char **argv) {
 
-	Manager manager(argc, argv);	
+	glutDisplayFunc(displayCallback);
+	glutIdleFunc(displayCallback);
 
-	while(1==1) {
-		glutMainLoopEvent();
-		manager.renderScene();
-		manager.checkTime();
-	}
+	glutMainLoop();
 	
 	return 0;
 }
